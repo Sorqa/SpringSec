@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/sec")
+@RequestMapping("/board")
 public class SecController {
 
     @GetMapping("")
     @ResponseBody
     public String index(Model model) {
-        return "Spting Security Index";
+        return "Spring Security Index";
     }
 
     @GetMapping("/loginForm")

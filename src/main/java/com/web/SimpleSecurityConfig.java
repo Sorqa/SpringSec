@@ -14,11 +14,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import lombok.extern.slf4j.Slf4j;
 
 
-
-
-@Slf4j
-@Configuration
-@EnableWebSecurity
+//@Slf4j
+//@Configuration
+//@EnableWebSecurity
 public class SimpleSecurityConfig
 {
     @Bean
@@ -26,21 +24,21 @@ public class SimpleSecurityConfig
     {   /* 매번 다른 인코딩값을 생성하며, 생성된 인코딩 값은 내부에서 결국 hashpw()가 리턴한
       값의 비교에 최종적으로 패스워드 일치 여부가 결정된다 */
         BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
-        System.out.println("employee->" + enc.encode("employee"));
-        System.out.println("imadmin->" + enc.encode("imadmin"));
-        System.out.println("guest->" + enc.encode("guest"));
         System.out.println("smith->" + enc.encode("smith"));
+        System.out.println("blake->" + enc.encode("blake"));
+        System.out.println("jones->" + enc.encode("jones"));
+        //System.out.println("smith->" + enc.encode("smith"));
         return enc;
     }
 
-    @Bean
+    //@Bean
     WebSecurityCustomizer webSecurityCustomizer()
     {
         return (webSecurity) -> webSecurity.ignoring().requestMatchers("/resources/**", "/ignore2");
     }
 
 
-    @Bean
+    //@Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception
     {
         System.out.println("접근제한 설정");
@@ -51,7 +49,7 @@ public class SimpleSecurityConfig
                 .requestMatchers("/sec/hello").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/sec/getemps").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/sec/addemp").hasAnyRole("ADMIN") //W짝이 어디서 닫히는지
-                .requestMatchers("/sec/menu").hasAnyRole("USER", "GUEST", "ADMIN")
+                .requestMatchers("/sec/menu").hasAnyRole("USER", "GUEST", "ADMIN","MANAGER")
                 .requestMatchers("/sec/sample/**").hasAnyRole("GUEST", "ADMIN")    // **은 모든 하위 경로
                 //.anyRequest().authenticated()  // 위의 설정 이외의 모든 요청은 인증을 거쳐야 한다
                 //anyRequest().denyAll();        // 위의 설정 이외의 모든 요청은 거부한다
@@ -76,12 +74,12 @@ public class SimpleSecurityConfig
     }
 
 
-    @Autowired
+    //@Autowired
     public void configureGlobal(AuthenticationManagerBuilder authenticationMgr) throws Exception
     {
         authenticationMgr.inMemoryAuthentication() /* 메모리 기반 인증(Authentication) */
                 .withUser("smith").password("$2a$10$W9X0MQ.8/x703e6IKzwQWOAb4/Xuu.scFNkfc9uOMl3fOnJWVBGHu")
-                .authorities("ROLE_USER")
+                .authorities("ROLE_USER","ROLE_MANAGER")
                 .and()
                 .withUser("employee").password("$2a$10$MZ2ANCUXIj5mrAVbytojruvzrPv9B3v9CXh8qI9qP13kU8E.mq7yO")
                 .authorities("ROLE_USER")
